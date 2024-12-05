@@ -48,12 +48,9 @@ unittest_teardown()
 
 unittest(test_constructor)
 {
-  INA239 INA(0x40);
+INA239 INA(5, &SPI);
 
-  Wire.begin();
   assertTrue(INA.begin());
-  assertTrue(INA.isConnected());
-  assertEqual(0x40, INA.getAddress());
 }
 
 
