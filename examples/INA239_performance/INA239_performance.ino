@@ -5,10 +5,14 @@
 //     URL: https://github.com/RobTillaart/INA228
 
 
-#include "INA228.h"
+#include "INA239.h"
 
 
-INA228 INA(0x40);
+//  select, dataIn, dataOut, clock == SOFTWARE SPI
+//  INA239 INA(5, 6, 7, &SPI);
+
+//  select, &SPI === HW SPI
+INA239 INA(5, &SPI);
 
 uint32_t start, stop;
 //  volatile, to prevent optimization
@@ -21,11 +25,12 @@ void setup()
   Serial.begin(115200);
   Serial.println(__FILE__);
   Serial.println();
-  Serial.print("INA228_LIB_VERSION: ");
-  Serial.println(INA228_LIB_VERSION);
+  Serial.print("INA239_LIB_VERSION: ");
+  Serial.println(INA239_LIB_VERSION);
   Serial.println();
 
-  Wire.begin();
+  SPI.begin();
+
   if (!INA.begin() )
   {
     Serial.println("Could not connect. Fix and Reboot");
@@ -34,13 +39,14 @@ void setup()
 
   INA.setMaxCurrentShunt(10, 0.0005);
 
-  for (long clk = 100000; clk <= 800000; clk *= 2)
+  for (long speed = 1000000; speed <= 8000000; speed *= 2)
   {
     //  setup and measure
-    Wire.setClock(clk);
+    INA.setSPIspeed(speed);
+
     Serial.println("\n========================================================");
     Serial.print("Speed: ");
-    Serial.println(clk);
+    Serial.println(speed);
     delay(100);
     test_core();
     //    test_config();
@@ -103,22 +109,6 @@ void test_core()
   Serial.print(stop - start);
   Serial.println();
   delay(10);
-
-  start = micros();
-  f = INA.getEnergy();
-  stop = micros();
-  Serial.print("getEnergy:\t");
-  Serial.print(stop - start);
-  Serial.println();
-  delay(10);
-
-  start = micros();
-  f = INA.getCharge();
-  stop = micros();
-  Serial.print("getCharge:\t");
-  Serial.print(stop - start);
-  Serial.println();
-  delay(10);
 }
 
 
@@ -130,25 +120,9 @@ void test_config()
   delay(10);
 
   start = micros();
-  value = INA.getAccumulation();
-  stop = micros();
-  Serial.print("getAccumulation:\t");
-  Serial.print(stop - start);
-  Serial.println();
-  delay(10);
-
-  start = micros();
   value = INA.getConversionDelay();
   stop = micros();
   Serial.print("getConversionDelay:\t");
-  Serial.print(stop - start);
-  Serial.println();
-  delay(10);
-
-  start = micros();
-  value = INA.getTemperatureCompensation();
-  stop = micros();
-  Serial.print("getTemperatureCompensation:\t");
   Serial.print(stop - start);
   Serial.println();
   delay(10);
@@ -217,14 +191,6 @@ void test_others()
 {
   Serial.println();
   Serial.println(__FUNCTION__);
-  delay(10);
-
-  start = micros();
-  value = INA.getShuntTemperatureCoefficent();
-  stop = micros();
-  Serial.print("getShuntTemperatureCoefficent:\t");
-  Serial.print(stop - start);
-  Serial.println();
   delay(10);
 
   start = micros();

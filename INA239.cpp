@@ -149,7 +149,7 @@ float INA239::getCurrent()
 //  PAGE 23 + 8.1.2 DONE
 float INA239::getPower()
 {
-  uint32_t value = _readRegister(INA239_POWER, 3);  
+  uint32_t value = _readRegister(INA239_POWER, 3);
   //  PAGE 28 (8.1.2)
   return value * 0.2 * _current_LSB;
 }
@@ -387,7 +387,7 @@ uint16_t INA239::getDiagnoseAlertBit(uint8_t bit)
 //  THRESHOLD AND LIMIT REGISTERS 12-17
 //
 //  TODO - API also for INA228
-//  PAGE 25 - minimalistic 
+//  PAGE 25 - minimalistic
 void INA239::setShuntOvervoltageTH(uint16_t threshold)
 {
   //  TODO ADCRANGE DEPENDENT
@@ -485,6 +485,30 @@ uint16_t INA239::getRevision()
 {
   uint16_t value = _readRegister(INA239_DEVICE_ID, 2);
   return value & 0x000F;
+}
+
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+//  SPI
+//
+void INA239::setSPIspeed(uint32_t speed)
+{
+  _SPIspeed = speed;
+  _spi_settings = SPISettings(_SPIspeed, MSBFIRST, SPI_MODE0);
+}
+
+
+uint32_t INA239::getSPIspeed()
+{
+  return _SPIspeed;
+}
+
+
+bool INA239::usesHWSPI()
+{
+  return _hwSPI;
 }
 
 

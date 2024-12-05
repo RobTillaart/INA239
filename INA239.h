@@ -223,7 +223,15 @@ public:
   uint16_t getRevision();      //  0x0001
 
 
-private:
+  //       speed in Hz
+  void     setSPIspeed(uint32_t speed);
+  uint32_t getSPIspeed();
+
+  //       Debugging
+  bool     usesHWSPI();
+
+
+protected:
   //  max 4 bytes
   uint32_t _readRegister(uint8_t reg, uint8_t bytes);
   uint16_t _writeRegister(uint8_t reg, uint16_t value);

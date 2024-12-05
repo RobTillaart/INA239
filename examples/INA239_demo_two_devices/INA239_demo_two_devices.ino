@@ -9,11 +9,18 @@
 #include "INA239.h"
 
 
-INA239 INA1(0x45);
-INA239 INA2(0x41);
+#include "INA239.h"
+
+//  select, dataIn, dataOut, clock == SOFTWARE SPI
+//  INA239 INA1(5, 6, 7, &SPI);
+
+//  select, &SPI === HW SPI
+INA239 INA1(5, &SPI);
+INA239 INA2(6, &SPI);
 
 
-void setup() {
+void setup()
+{
   Serial.begin(115200);
   Serial.println(__FILE__);
   Serial.println();
@@ -21,7 +28,8 @@ void setup() {
   Serial.println(INA239_LIB_VERSION);
   Serial.println();
 
-  Wire.begin();
+  SPI.begin();
+
   if (!INA1.begin())
   {
     Serial.println("Could not connect INA1. Fix and Reboot");

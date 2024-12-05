@@ -8,7 +8,11 @@
 #include "INA239.h"
 
 
-INA239 INA(0x40);
+//  select, dataIn, dataOut, clock == SOFTWARE SPI
+//  INA239 INA(5, 6, 7, &SPI);
+
+//  select, &SPI === HW SPI
+INA239 INA(5, &SPI);
 
 
 void setup()
@@ -20,7 +24,8 @@ void setup()
   Serial.println(INA239_LIB_VERSION);
   Serial.println();
 
-  Wire.begin();
+  SPI.begin();
+
   if (!INA.begin() )
   {
     Serial.println("Could not connect. Fix and Reboot");
@@ -30,12 +35,8 @@ void setup()
   INA.setMaxCurrentShunt(10, 0.015);
 
   //  REGISTER 0
-  Serial.print("Accumulation: ");
-  Serial.println(INA.getAccumulation());
   Serial.print("ConversionDelay: ");
   Serial.println(INA.getConversionDelay());
-  Serial.print("TemperatureCompensation: ");
-  Serial.println(INA.getTemperatureCompensation());
   Serial.print("ADCRange: ");
   Serial.println(INA.getADCRange());
   Serial.println();

@@ -23,6 +23,8 @@ void setup()
   Serial.println(INA239_LIB_VERSION);
   Serial.println();
 
+  SPI.begin();
+
   if (!INA.begin() )
   {
     Serial.println("Could not connect. Fix and Reboot");

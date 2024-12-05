@@ -5,10 +5,14 @@
 //     URL: https://github.com/RobTillaart/INA228
 
 
-#include "INA228.h"
+#include "INA239.h"
 
 
-INA228 INA(0x40);
+//  select, dataIn, dataOut, clock == SOFTWARE SPI
+//  INA239 INA(5, 6, 7, &SPI);
+
+//  select, &SPI === HW SPI
+INA239 INA(5, &SPI);
 
 
 void setup()
@@ -16,11 +20,12 @@ void setup()
   Serial.begin(115200);
   Serial.println(__FILE__);
   Serial.println();
-  Serial.print("INA228_LIB_VERSION: ");
-  Serial.println(INA228_LIB_VERSION);
+  Serial.print("INA239_LIB_VERSION: ");
+  Serial.println(INA239_LIB_VERSION);
   Serial.println();
 
-  Wire.begin();
+  SPI.begin();
+
   if (!INA.begin() )
   {
     Serial.println("Could not connect. Fix and Reboot");
