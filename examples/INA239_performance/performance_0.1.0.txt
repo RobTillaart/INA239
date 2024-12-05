@@ -1,0 +1,3 @@
+BOARD:  Arduino UNO
+IDE:    1.8.19
+
