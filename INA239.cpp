@@ -83,7 +83,7 @@ bool INA239::begin()
   pinMode(_select, OUTPUT);
   digitalWrite(_select, HIGH);
 
-  _spi_settings = SPISettings(_SPIspeed, MSBFIRST, SPI_MODE0);
+  _spi_settings = SPISettings(_SPIspeed, MSBFIRST, SPI_MODE1);
 
   if(_hwSPI)
   {
@@ -516,34 +516,47 @@ bool INA239::usesHWSPI()
 //
 //  SHOULD BE PROTECTED
 //
-uint32_t INA239::_readRegister(uint8_t reg, uint8_t bytes)
+uint32_t INA239::_readRegister(uint8_t reg, uint8_t bytes)  //  bytes = 2 or 3.
 {
-  if (bytes == 2)
+  //  Dedicated SPI code
+  uint32_t rv = 0;
+  uint8_t addr = (reg << 2) + 1;  //  1 = Read flag.  P18 datasheet
+  uint8_t count = bytes;
+  digitalWrite(_select, LOW);
+  if (_hwSPI)
   {
-    return updateDevice(reg, 0);
+    _mySPI->beginTransaction(_spi_settings);
+    rv += _mySPI->transfer(addr);
+    while (count--)
+    {
+      rv <<= 8;
+      rv += _mySPI->transfer(0x00);
+    }
+    _mySPI->endTransaction();
   }
-  return 0;  // TODO 3 bytes
+  else      //  Software SPI
+  {
+    rv += swSPI_transfer(addr);
+    while (count--)
+    {
+      rv <<= 8;
+      rv += swSPI_transfer(0x00);
+    }
+  }
+  digitalWrite(_select, HIGH);
+  return rv;
 }
 
 
 uint16_t INA239::_writeRegister(uint8_t reg, uint16_t value)
 {
-  return updateDevice(reg, value);
-}
-
-
-/////////////////////////////////////////////////////////////////////////////
-//
-//  PROTECTED
-//
-uint32_t INA239::updateDevice(uint8_t reg, uint16_t value)
-{
   uint32_t rv = 0;
+  uint8_t addr = (reg << 2);  //  0 = Write flag.  P18 datasheet
   digitalWrite(_select, LOW);
   if (_hwSPI)
   {
     _mySPI->beginTransaction(_spi_settings);
-    rv += _mySPI->transfer(reg);
+    rv += _mySPI->transfer(addr);
     rv <<= 8;
     rv += _mySPI->transfer(value >> 8);
     rv <<= 8;
@@ -559,9 +572,14 @@ uint32_t INA239::updateDevice(uint8_t reg, uint16_t value)
     rv += swSPI_transfer(value & 0xFF);
   }
   digitalWrite(_select, HIGH);
-  return rv;
+  return 0;
 }
 
+
+/////////////////////////////////////////////////////////////////////////////
+//
+//  PROTECTED
+//
 
 uint8_t INA239::swSPI_transfer(uint8_t value)
 {

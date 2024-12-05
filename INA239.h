@@ -245,9 +245,8 @@ protected:
   uint8_t  _clock  = 255;
   uint8_t  _select = 255;
   bool     _hwSPI  = false;
-  uint32_t _SPIspeed = 16000000;
+  uint32_t _SPIspeed = 10000000;  //  max speed
 
-  uint32_t updateDevice(uint8_t pm, uint16_t value);
   uint8_t  swSPI_transfer(uint8_t value);
 
   __SPI_CLASS__ * _mySPI;

@@ -21,6 +21,8 @@ Arduino library for the INA239, SPI, 16 bit, voltage, current and power sensor.
 This library controls the INA239, a device that measures voltage,
 current, power, and temperature.
 
+The library is not tested with hardware yet, feedback welcome.
+
 The library is written to be able to use the faster SPI interface which
 might be needed (faster than I2C which is used by many other INA devices.).
 
@@ -35,8 +37,6 @@ The INA239 also provides an alert line, to generate an interrupt
 in case a predefined threshold has been met.
 This can be an under- or over-voltage, temperature or power limit.
 The library does not handle these interrupts.
-
-The library is not tested with hardware yet, feedback welcome.
 
 The code is based upon my INA228 library which uses the same registers
 (plus 3 more) and has a I2C interface.
@@ -378,6 +378,7 @@ Currently it are just wrappers around the registers.
   - remove INA228 sections, 
   - page number references
 - test with hardware
+- verify SPI mode 1 == right
 
 
 #### Should
