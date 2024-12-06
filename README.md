@@ -152,17 +152,15 @@ Time in micros, SPI speed in MHz.
 
 |  SPI  |  function         |  time  |  notes  |
 |:-----:|:------------------|:------:|:-------:|
-|  1.0  |  getBusVoltage    |        |  100%
-|  1.0  |  getShuntVoltage  |        |
-|  1.0  |  getCurrent       |        |
-|  1.0  |  getPower         |        |
-|  1.0  |  getTemperature   |        |
-|  1.0  |  getEnergy        |        |
-|  1.0  |  getCharge        |        |
+|  1.0  |  getBusVoltage    |   56   |  100%
+|  1.0  |  getShuntVoltage  |  100   |
+|  1.0  |  getCurrent       |   52   |
+|  1.0  |  getPower         |   68   |
+|  1.0  |  getTemperature   |   52   |
 |       |                   |        |  other functions similar gain.
-|  2.0  |  getBusVoltage    |        | 
-|  4.0  |  getBusVoltage    |        | 
-|  8.0  |  getBusVoltage    |        | 
+|  2.0  |  getBusVoltage    |   44   | 
+|  4.0  |  getBusVoltage    |   40   | 
+|  8.0  |  getBusVoltage    |   32   | 
 
 
 Most non core functions are as fast as **getTemperature()**
