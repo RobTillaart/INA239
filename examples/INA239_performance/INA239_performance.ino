@@ -1,8 +1,8 @@
 //
-//    FILE: INA228_performance.ino
+//    FILE: INA239_performance.ino
 //  AUTHOR: Rob Tillaart
 // PURPOSE: test - performance
-//     URL: https://github.com/RobTillaart/INA228
+//     URL: https://github.com/RobTillaart/INA239
 
 
 #include "INA239.h"

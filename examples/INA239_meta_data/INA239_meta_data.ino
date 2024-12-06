@@ -1,8 +1,8 @@
 //
-//    FILE: INA228_meta_data.ino
+//    FILE: INA239_meta_data.ino
 //  AUTHOR: Rob Tillaart
 // PURPOSE: dump metadata
-//     URL: https://github.com/RobTillaart/INA228
+//     URL: https://github.com/RobTillaart/INA239
 
 
 #include "INA239.h"
