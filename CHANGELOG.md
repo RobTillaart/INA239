@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [0.1.1] - 2025-01-30
 - fix #4, cache ADCrange to improve **getShuntVoltage()**
+- add INA_comparison_table.md
 - minor edits
 
 
