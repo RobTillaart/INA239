@@ -232,8 +232,9 @@ Read datasheet for details, section 7.6.1.1, page xx
 (shunt register) again ==> call **setMaxCurrentShunt()** and more.
 - **void setConversionDelay(uint8_t steps)**  Conversion delay in 0..255 steps of 2 ms
 - **uint8_t getConversionDelay()** return set value.
-- **void setADCRange(bool flag)** flag = false => 164 mV, true => 41 mV
+- **bool setADCRange(bool flag)** flag = false => 164 mV, true => 41 mV
 Since 0.2.1 setADCRange() calls setMaxCurrentShunt() to update the internal LSB values.
+Returns false on failure of setMaxCurrentShunt().
 - **bool getADCRange()** return set value.
 
 TODO: examples to show the effect of the ADC configuration.

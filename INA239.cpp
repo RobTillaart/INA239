@@ -205,8 +205,8 @@ bool INA239::setADCRange(bool flag)
   //  if value has not changed we do not need to write it back.
   _writeRegister(INA239_CONFIG, value);
   //  INA228, #26 
-  setMaxCurrentShunt(getMaxCurrent(), getShunt());
-  return true;
+  bool rv = setMaxCurrentShunt(getMaxCurrent(), getShunt()) == 0;
+  return rv;
 }
 
 bool INA239::getADCRange()
