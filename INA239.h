@@ -1,7 +1,7 @@
 #pragma once
 //    FILE: INA239.h
 //  AUTHOR: Rob Tillaart
-// VERSION: 0.3.1
+// VERSION: 0.4.0
 //    DATE: 2024-12-05
 // PURPOSE: Arduino library for the INA239, SPI, 16 bit, voltage, current and power sensor.
 //     URL: https://github.com/RobTillaart/INA239
@@ -13,7 +13,7 @@
 #include "SPI.h"
 
 
-#define INA239_LIB_VERSION          (F("0.3.1"))
+#define INA239_LIB_VERSION          (F("0.4.0"))
 
 
 #ifndef __SPI_CLASS__
@@ -111,32 +111,32 @@ public:
   //
   //  CORE FUNCTIONS + scale wrappers.
   //
-  //       BUS VOLTAGE
+  //       BUS VOLTAGE - section 7.6.1.4, page 22
   float    getBusVoltage();     //  Volt
   float    getBusVolt()         { return getBusVoltage(); };
   float    getBusMilliVolt()    { return getBusVoltage()   * 1e3; };
   float    getBusMicroVolt()    { return getBusVoltage()   * 1e6; };
 
-  //       SHUNT VOLTAGE
+  //       SHUNT VOLTAGE - section 7.6.1.3, page 22
   float    getShuntVoltage();   //  Volt
   float    getShuntVolt()       { return getShuntVoltage(); };
   float    getShuntMilliVolt()  { return getShuntVoltage() * 1e3; };
   float    getShuntMicroVolt()  { return getShuntVoltage() * 1e6; };
 
-  //       SHUNT CURRENT
+  //       SHUNT CURRENT - section 7.6.1.7, page 23
   float    getCurrent();        //  Ampere
   float    getAmpere()          { return getCurrent(); };
   float    getMilliAmpere()     { return getCurrent()      * 1e3; };
   float    getMicroAmpere()     { return getCurrent()      * 1e6; };
 
-  //       POWER
+  //       POWER - section 7.6.1.8, page 23
   float    getPower();          //  Watt
   float    getWatt()            { return getPower(); };
   float    getMilliWatt()       { return getPower()        * 1e3; };
   float    getMicroWatt()       { return getPower()        * 1e6; };
   float    getKiloWatt()        { return getPower()        * 1e-3; };
 
-  //       TEMPERATURE
+  //       TEMPERATURE - section 7.6.1.6, page 23
   float    getTemperature();    //  Celsius
 
 
@@ -154,7 +154,7 @@ public:
 
   //
   //  CONFIG ADC REGISTER 1
-  //  read datasheet for details, section 7.6.1.2, page 21++
+  //  read datasheet for details, section 7.6.1.2, page 20++
   //
   bool     setMode(uint8_t mode = INA239_MODE_CONT_TEMP_BUS_SHUNT);
   uint8_t  getMode();
@@ -184,7 +184,7 @@ public:
 
   //
   //  DIAGNOSE ALERT REGISTER 11  (0x0B)
-  //  read datasheet for details, section 7.6.1.12, page 26++.
+  //  read datasheet for details, section 7.6.1.9, page 23.
   //
   void     setDiagnoseAlert(uint16_t flags);
   uint16_t getDiagnoseAlert();
@@ -197,7 +197,7 @@ public:
 
   //
   //  THRESHOLD AND LIMIT REGISTERS 12-17
-  //  read datasheet for details, section 7.3.7, page 16++
+  //  read datasheet for details, section 7.6.1.10-15, page 25++
   //
   //  TODO - design and implement better API?
   //

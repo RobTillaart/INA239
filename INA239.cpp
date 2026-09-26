@@ -1,6 +1,6 @@
 //    FILE: INA239.cpp
 //  AUTHOR: Rob Tillaart
-// VERSION: 0.3.1
+// VERSION: 0.4.0
 //    DATE: 2024-12-05
 // PURPOSE: Arduino library for the INA239, SPI, 16 bit, voltage, current and power sensor.
 //     URL: https://github.com/RobTillaart/INA239
@@ -112,8 +112,8 @@ bool INA239::begin()
 //  PAGE 22
 float INA239::getBusVoltage()
 {
-  //  always positive, remove reserved bits.
-  int32_t value = _readRegister(INA239_BUS_VOLTAGE, 2) >> 4;
+  //  always positive
+  int32_t value = _readRegister(INA239_BUS_VOLTAGE, 2);
   float bus_LSB = 3.125e-3;  //  3.125 mV/LSB
   float voltage = value * bus_LSB;
   return voltage;
@@ -480,7 +480,7 @@ uint16_t INA239::getPowerOverLimitTH()
 //
 //  MANUFACTURER and ID REGISTER 3E/3F
 //
-//  PAGE 26
+//  section 7.6.1.16-17, PAGE 26
 uint16_t INA239::getManufacturer()
 {
   uint16_t value = _readRegister(INA239_MANUFACTURER, 2);
