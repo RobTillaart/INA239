@@ -12,6 +12,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - add readRegister() 
 - add writeRegister()
 - add f suffix for float constants
+- add void setBusVoltageLSB(float lsb)
+- add void setVoltageRatio(float ratio)
 - update readme.md
 - add output examples (test run)
 - minor edits

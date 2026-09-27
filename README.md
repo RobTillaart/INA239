@@ -53,7 +53,10 @@ Feedback as always is welcome.
 In 0.4.0 bugs were fixed in getBusVoltage() and in getTemperature();
 All float constants now have f-suffix added to prevent interpreting 
 them as double.
-Also added is direct register access. 
+Added is direct register access.
+Added **INA.setBusVoltageLSB(lsb)** and **INA.setVoltageRatio(ratio)**
+to adjust VBUS and POWER when using a voltage divider.
+
 All pre 0.4.0 versions are obsolete.
 
 
