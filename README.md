@@ -299,11 +299,11 @@ This configuration is only needed if one wants to monitor a voltage above the
 
 There are two ways to define the busVoltageLSB, one is direct, the other is 
 based upon the scaling needed from Vmax to 85 Volt, or a bit lower to be safe.
-You need to call only one these two in setup() to adjust for the voltage divider.
+You need to call only one of these two in setup() to adjust for the voltage divider.
 
 - **void setBusVoltageLSB(float LSB)** LSB must explicitly be set. 
 Default = 3.125e-3f;
-- **void setVoltageRatio(float ratio = 1.0)** ratio must explicitly be set.
+- **void setVoltageRatio(float ratio)** ratio must explicitly be set.
 
 ### Configuration
 
