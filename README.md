@@ -90,10 +90,10 @@ Also the values are not meaningful if there is no shunt connected.
 
 
 ```
-         GND                           VCC
+         GND                         Voltage
           |                             |
           |                             |
-          |            +----[ LOAD ]----+
+          +--[SHUNT]---+----[ LOAD ]----+
           |            |                |
           |            |                |
       /-------------------------------------\
@@ -107,21 +107,21 @@ Also the values are not meaningful if there is no shunt connected.
 
 ```
 
-Verified to work in #13, feedback welcome.
+Verified to work in #13, more feedback welcome.
 
 
 ### Schema HIGH SIDE
 
 
 ```
-         GND                          VCC
-          |                            |
-          |                            |
-          +---[ LOAD ]---+        +----+
-                         |        |    |
-                         |        |    |
+         GND                         Voltage
+          |                             |
+          |                             |
+          +--[ LOAD ]--+--[SHUNT]--+----+
+                       |           |    |
+                       |           |    |
       /-------------------------------------\
-      |                 VIN-     VIN+  VBUS |
+      |               VIN-       VIN+  VBUS |
       |                                     |
       |                                     |
       |          INA239 BREAKOUT            |
@@ -131,7 +131,59 @@ Verified to work in #13, feedback welcome.
 
 ```
 
-Verified to work in #13, feedback welcome.
+Verified to work in #13, more feedback welcome.
+
+
+### Schema voltage divider
+
+To measure a bus voltage higher than the 85 Volt maximum limit, 
+use a voltage divider connected to the VBUS pin.
+Make sure that the voltage divider drops the maximum voltage enough
+under the 85 Volt limit so the INA239 can handle it.
+
+Note a voltage divider also affects the power reported.
+
+One must use the LOW SIDE mode, as one does not want to have
+the high voltage (e.g. 120 Volt) to the VIN+ and VIN- pins.
+
+
+```
+         GND                            Voltage
+          |                                |
+          |                                |
+          +---[SHUNT]---+-----[ LOAD ]-----+
+          |             |                  |
+          |             |                  |
+          |             |        +---[R1---+
+          |             |        |
+          |             |        |
+          |             |        +---[R2]-------GND
+          |             |        |
+          |             |        |
+      /-------------------------------------\
+      |  VIN-          VIN+     VBUS        |
+      |                                     |
+      |                                     |
+      |          INA239 BREAKOUT            |
+      |                                     |
+      |                                     |
+      \-------------------------------------/
+
+```
+
+The ratio becomes (R1 + R2) / R2.
+
+Example, the high voltage is maximum 120 Volt.
+This must be mapped upon e.g. 80 Volts so the INA239 still has a 5 Volt margin.
+So the ratio needed is 120 / 80 ==> 1.5.
+
+By choosing R1 = 100 kΩ and R2 200 kΩ, the factor = (100+200)/200 = 1.5.
+The new BusVoltageLSB becomes 1.5 x 3.125e-3f = 4.6875e-3f
+
+Calling **INA.setBusVoltageLSB(4.6875e-3f)** or **INA.setVoltageRatio(1.5)** 
+will now return the corrected getBusVoltage() and getPower().
+
+Note that measuring between GND and VBUS will still give the uncorrected voltage!
 
 
 ### Special characters
@@ -235,6 +287,20 @@ Note this value can be positive or negative as the INA239 is bidirectional.
 - **float getMicroWatt()** idem
 - **float getKiloWatt()** idem
 
+### Configuration busVoltageLSB
+
+New since 0.4.0.
+
+This configuration is only needed if one wants to monitor a voltage above the
+85 Volt limit of the INA239. See "Schema voltage divider" section above.
+
+There are two ways to define the busVoltageLSB, one is direct, the other is 
+based upon the scaling needed from Vmax to 85 Volt, or a bit lower to be safe.
+You need to call only one these two in setup() to adjust for the voltage divider.
+
+- **void setBusVoltageLSB(float LSB)** LSB must explicitly be set. 
+Default = 3.125e-3f;
+- **void setVoltageRatio(float ratio = 1.0)** ratio must explicitly be set.
 
 ### Configuration
 
@@ -405,6 +471,9 @@ Currently it are just wrappers around the registers.
   - to show the effect of the ADC configuration.
 
 #### Could
+
+- getBusVoltageLSB() for completeness?
+- getVoltageRatio() for completeness?
 
 #### Won't
 

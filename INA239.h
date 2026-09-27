@@ -162,6 +162,11 @@ public:
   //       TEMPERATURE - section 7.6.1.6, page 23
   float    getTemperature();    //  Celsius
 
+  //  CONFIGURE BUSVOLTAGE LSB - see issue #13
+  //  affects getBusVoltage() and getPower();
+  void     setBusVoltageLSB(float LSB);
+  void     setVoltageRatio(float ratio);
+
 
   //
   //  CONFIG REGISTER 0
@@ -174,6 +179,7 @@ public:
   //  flag = false => 164 mV, true => 41 mV
   bool     setADCRange(bool flag);
   bool     getADCRange();
+
 
   //
   //  CONFIG ADC REGISTER 1
@@ -191,6 +197,7 @@ public:
   bool     setAverage(uint8_t avg = INA239_1_SAMPLE);
   uint8_t  getAverage();
 
+
   //
   //  SHUNT CALIBRATION REGISTER 2
   //  read datasheet for details. use with care.
@@ -204,6 +211,7 @@ public:
   float    getCurrentLSB();
   float    getCurrentLSB_mA() { return _current_LSB * 1e3f; };
   float    getCurrentLSB_uA() { return _current_LSB * 1e6f; };
+
 
   //
   //  DIAGNOSE ALERT REGISTER 11  (0x0B)
@@ -272,6 +280,7 @@ private:
   float    _shunt;
   float    _maxCurrent;
   bool     _ADCRange;
+  float    _voltageRatio;
 
   uint8_t  _dataIn = 255;
   uint8_t  _dataOut= 255;
