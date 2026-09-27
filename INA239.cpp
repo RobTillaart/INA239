@@ -10,24 +10,6 @@
 
 #include "INA239.h"
 
-//      REGISTERS                   ADDRESS    BITS  RW   //  names same as in INA228
-#define INA239_CONFIG               0x00    //  16   RW
-#define INA239_ADC_CONFIG           0x01    //  16   RW
-#define INA239_SHUNT_CAL            0x02    //  16   RW
-#define INA239_SHUNT_VOLTAGE        0x04    //  16   R-
-#define INA239_BUS_VOLTAGE          0x05    //  16   R-
-#define INA239_TEMPERATURE          0x06    //  16   R-
-#define INA239_CURRENT              0x07    //  16   R-
-#define INA239_POWER                0x08    //  24   R-
-#define INA239_DIAG_ALERT           0x0B    //  16   RW
-#define INA239_SOVL                 0x0C    //  16   RW
-#define INA239_SUVL                 0x0D    //  16   RW
-#define INA239_BOVL                 0x0E    //  16   RW
-#define INA239_BUVL                 0x0F    //  16   RW
-#define INA239_TEMP_LIMIT           0x10    //  16   RW
-#define INA239_POWER_LIMIT          0x11    //  16   RW
-#define INA239_MANUFACTURER         0x3E    //  16   R-
-#define INA239_DEVICE_ID            0x3F    //  16   R-
 
 
 //  CONFIG MASKS (register 0)
@@ -57,8 +39,8 @@ INA239::INA239(uint8_t select, __SPI_CLASS__ * mySPI)
   _mySPI    = mySPI;
 
   //  no calibrated values by default.
-  _shunt       = 0.015;
-  _maxCurrent  = 10.0;
+  _shunt       = 0.015f;
+  _maxCurrent  = 10.0f;
   _current_LSB = _maxCurrent * pow(2, -19);
 }
 
@@ -73,8 +55,8 @@ INA239::INA239(uint8_t select, uint8_t dataIn, uint8_t dataOut, uint8_t clock)
   _mySPI    = NULL;
 
   //  no calibrated values by default.
-  _shunt       = 0.015;
-  _maxCurrent  = 10.0;
+  _shunt       = 0.015f;
+  _maxCurrent  = 10.0f;
   _current_LSB = _maxCurrent * pow(2, -19);
 }
 
@@ -114,7 +96,7 @@ float INA239::getBusVoltage()
 {
   //  always positive
   int32_t value = _readRegister(INA239_BUS_VOLTAGE, 2);
-  float bus_LSB = 3.125e-3;  //  3.125 mV/LSB
+  float bus_LSB = 3.125e-3f;  //  3.125 mV/LSB
   float voltage = value * bus_LSB;
   return voltage;
 }
@@ -123,10 +105,10 @@ float INA239::getBusVoltage()
 float INA239::getShuntVoltage()
 {
   //  shunt_LSB depends on ADCRANGE in INA239_CONFIG register.
-  float shunt_LSB = 5e-6;  //  5.0 uV/LSB
+  float shunt_LSB = 5e-6f;  //  5.0 uV/LSB
   if (_ADCRange == true)
   {
-    shunt_LSB = 1.25e-6;   //  1.25 uV/LSB
+    shunt_LSB = 1.25e-6f;   //  1.25 uV/LSB
   }
 
   //  remove reserved bits.
@@ -153,14 +135,15 @@ float INA239::getPower()
 {
   uint32_t value = _readRegister(INA239_POWER, 3);
   //  PAGE 28 (8.1.2)
-  return value * 0.2 * _current_LSB;
+  return value * 0.2f * _current_LSB;
 }
 
 //  PAGE 23 DONE
 float INA239::getTemperature()
 {
   uint32_t value = _readRegister(INA239_TEMPERATURE, 2);
-  float LSB = 125e-3;  //  125 m°C/LSB
+  value >>= 4;
+  float LSB = 125e-3f;  //  125 m°C/LSB
   return value * LSB;
 }
 
@@ -311,13 +294,13 @@ uint8_t INA239::getAverage()
 int INA239::setMaxCurrentShunt(float maxCurrent, float shunt)
 {
   //  Shunt can be really small
-  if (shunt < 0.0001) return -2;   //  TODO error code
+  if (shunt < 0.0001f) return -2;   //  TODO error code
   _maxCurrent = maxCurrent;
   _shunt = shunt;
-  _current_LSB = _maxCurrent * 3.0517578125e-5;  //  pow(2, -15);
+  _current_LSB = _maxCurrent * 3.0517578125e-5f;  //  pow(2, -15);
 
   //  PAGE 31 (8.1.2)
-  float shunt_cal = 819.2e6 * _current_LSB * _shunt;
+  float shunt_cal = 819.2e6f * _current_LSB * _shunt;
   //  depends on ADCRANGE in INA239_CONFIG register.
   if (_ADCRange == true)
   {
@@ -426,38 +409,38 @@ uint16_t INA239::getShuntUndervoltageTH()
 void INA239::setBusOvervoltageTH(uint16_t threshold)
 {
   if (threshold > 0x7FFF) return;
-  //float LSB = 3.125e-3;  //  3.125 mV/LSB.
+  //float LSB = 3.125e-3f;  //  3.125 mV/LSB.
   _writeRegister(INA239_BOVL, threshold);
 }
 
 uint16_t INA239::getBusOvervoltageTH()
 {
-  //float LSB = 3.125e-3;  //  3.125 mV/LSB.
+  //float LSB = 3.125e-3f;  //  3.125 mV/LSB.
   return _readRegister(INA239_BOVL, 2);
 }
 
 void INA239::setBusUndervoltageTH(uint16_t threshold)
 {
   if (threshold > 0x7FFF) return;
-  //float LSB = 3.125e-3;  //  3.125 mV/LSB.
+  //float LSB = 3.125e-3f;  //  3.125 mV/LSB.
   _writeRegister(INA239_BUVL, threshold);
 }
 
 uint16_t INA239::getBusUndervoltageTH()
 {
-  //float LSB = 3.125e-3;  //  3.125 mV/LSB.
+  //float LSB = 3.125e-3f;  //  3.125 mV/LSB.
   return _readRegister(INA239_BUVL, 2);
 }
 
 void INA239::setTemperatureOverLimitTH(uint16_t threshold)
 {
-  //float LSB = 125e-3;  //  125 m°C/LSB.
+  //float LSB = 125e-3f;  //  125 m°C/LSB.
   _writeRegister(INA239_TEMP_LIMIT, threshold);
 }
 
 uint16_t INA239::getTemperatureOverLimitTH()
 {
-  //float LSB = 125e-3;  //  125 m°C/LSB.
+  //float LSB = 125e-3f;  //  125 m°C/LSB.
   return _readRegister(INA239_TEMP_LIMIT, 2);
 }
 

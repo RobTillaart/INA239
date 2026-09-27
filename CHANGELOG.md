@@ -8,6 +8,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [0.4.0] - 2026-09-26
 - fix #13, incorrect getBusVoltage() result.
+- fix shift getTemperature()
+- add readRegister() 
+- add writeRegister()
+- add f suffix for float constants
 - update readme.md
 - add output examples (test run)
 - minor edits

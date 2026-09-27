@@ -50,7 +50,10 @@ Feedback as always is welcome.
 
 ### Update 0.4.0
 
-In 0.4.0 a bug was fixed in getBusVoltage().
+In 0.4.0 bugs were fixed in getBusVoltage() and in getTemperature();
+All float constants now have f-suffix added to prevent interpreting 
+them as double.
+Also added is direct register access. 
 All pre 0.4.0 versions are obsolete.
 
 
@@ -104,7 +107,7 @@ Also the values are not meaningful if there is no shunt connected.
 
 ```
 
-Not tested with hardware, feedback welcome.
+Verified to work in #13, feedback welcome.
 
 
 ### Schema HIGH SIDE
@@ -128,7 +131,7 @@ Not tested with hardware, feedback welcome.
 
 ```
 
-Not tested with hardware, feedback welcome.
+Verified to work in #13, feedback welcome.
 
 
 ### Special characters

@@ -79,22 +79,45 @@ enum INA239_timing_enum {
 //  for diagnose/alert() bit fields.
 //  TODO bit masks?
 enum INA239_diag_enum {
-  INA239_DIAG_MEMORY_STATUS      = 0,
-  INA239_DIAG_CONVERT_COMPLETE   = 1,
-  INA239_DIAG_POWER_OVER_LIMIT   = 2,
-  INA239_DIAG_BUS_UNDER_LIMIT    = 3,
-  INA239_DIAG_BUS_OVER_LIMIT     = 4,
-  INA239_DIAG_SHUNT_UNDER_LIMIT  = 5,
-  INA239_DIAG_SHUNT_OVER_LIMIT   = 6,
-  INA239_DIAG_TEMP_OVER_LIMIT    = 7,
-  INA239_DIAG_RESERVED           = 8,
-  INA239_DIAG_MATH_OVERFLOW      = 9,
-  INA239_DIAG_CHARGE_OVERFLOW    = 10,
-  INA239_DIAG_ENERGY_OVERFLOW    = 11,
-  INA239_DIAG_ALERT_POLARITY     = 12,
-  INA239_DIAG_SLOW_ALERT         = 13,
-  INA239_DIAG_CONVERT_READY      = 14,
-  INA239_DIAG_ALERT_LATCH        = 15
+  INA239_DIAG_MEMORY_STATUS     = 0,
+  INA239_DIAG_CONVERT_COMPLETE  = 1,
+  INA239_DIAG_POWER_OVER_LIMIT  = 2,
+  INA239_DIAG_BUS_UNDER_LIMIT   = 3,
+  INA239_DIAG_BUS_OVER_LIMIT    = 4,
+  INA239_DIAG_SHUNT_UNDER_LIMIT = 5,
+  INA239_DIAG_SHUNT_OVER_LIMIT  = 6,
+  INA239_DIAG_TEMP_OVER_LIMIT   = 7,
+  INA239_DIAG_RESERVED          = 8,
+  INA239_DIAG_MATH_OVERFLOW     = 9,
+  INA239_DIAG_CHARGE_OVERFLOW   = 10,
+  INA239_DIAG_ENERGY_OVERFLOW   = 11,
+  INA239_DIAG_ALERT_POLARITY    = 12,
+  INA239_DIAG_SLOW_ALERT        = 13,
+  INA239_DIAG_CONVERT_READY     = 14,
+  INA239_DIAG_ALERT_LATCH       = 15
+};
+
+
+enum INA239_register_enum
+{
+//   REGISTERS           ADDRESS    BITS  RW  //  names same as in INA228
+  INA239_CONFIG        = 0x00,   //  16   RW
+  INA239_ADC_CONFIG    = 0x01,   //  16   RW
+  INA239_SHUNT_CAL     = 0x02,   //  16   RW
+  INA239_SHUNT_VOLTAGE = 0x04,   //  16   R-
+  INA239_BUS_VOLTAGE   = 0x05,   //  16   R-
+  INA239_TEMPERATURE   = 0x06,   //  16   R-
+  INA239_CURRENT       = 0x07,   //  16   R-
+  INA239_POWER         = 0x08,   //  24   R-
+  INA239_DIAG_ALERT    = 0x0B,   //  16   RW
+  INA239_SOVL          = 0x0C,   //  16   RW
+  INA239_SUVL          = 0x0D,   //  16   RW
+  INA239_BOVL          = 0x0E,   //  16   RW
+  INA239_BUVL          = 0x0F,   //  16   RW
+  INA239_TEMP_LIMIT    = 0x10,   //  16   RW
+  INA239_POWER_LIMIT   = 0x11,   //  16   RW
+  INA239_MANUFACTURER  = 0x3E,   //  16   R-
+  INA239_DEVICE_ID     = 0x3F    //  16   R-
 };
 
 
@@ -114,27 +137,27 @@ public:
   //       BUS VOLTAGE - section 7.6.1.4, page 22
   float    getBusVoltage();     //  Volt
   float    getBusVolt()         { return getBusVoltage(); };
-  float    getBusMilliVolt()    { return getBusVoltage()   * 1e3; };
-  float    getBusMicroVolt()    { return getBusVoltage()   * 1e6; };
+  float    getBusMilliVolt()    { return getBusVoltage()   * 1e3f; };
+  float    getBusMicroVolt()    { return getBusVoltage()   * 1e6f; };
 
   //       SHUNT VOLTAGE - section 7.6.1.3, page 22
   float    getShuntVoltage();   //  Volt
   float    getShuntVolt()       { return getShuntVoltage(); };
-  float    getShuntMilliVolt()  { return getShuntVoltage() * 1e3; };
-  float    getShuntMicroVolt()  { return getShuntVoltage() * 1e6; };
+  float    getShuntMilliVolt()  { return getShuntVoltage() * 1e3f; };
+  float    getShuntMicroVolt()  { return getShuntVoltage() * 1e6f; };
 
   //       SHUNT CURRENT - section 7.6.1.7, page 23
   float    getCurrent();        //  Ampere
   float    getAmpere()          { return getCurrent(); };
-  float    getMilliAmpere()     { return getCurrent()      * 1e3; };
-  float    getMicroAmpere()     { return getCurrent()      * 1e6; };
+  float    getMilliAmpere()     { return getCurrent()      * 1e3f; };
+  float    getMicroAmpere()     { return getCurrent()      * 1e6f; };
 
   //       POWER - section 7.6.1.8, page 23
   float    getPower();          //  Watt
   float    getWatt()            { return getPower(); };
-  float    getMilliWatt()       { return getPower()        * 1e3; };
-  float    getMicroWatt()       { return getPower()        * 1e6; };
-  float    getKiloWatt()        { return getPower()        * 1e-3; };
+  float    getMilliWatt()       { return getPower()        * 1e3f; };
+  float    getMicroWatt()       { return getPower()        * 1e6f; };
+  float    getKiloWatt()        { return getPower()        * 1e-3f; };
 
   //       TEMPERATURE - section 7.6.1.6, page 23
   float    getTemperature();    //  Celsius
@@ -175,12 +198,12 @@ public:
   //  shunt >= 0.0001.
   //  returns _current_LSB;
   int      setMaxCurrentShunt(float maxCurrent, float shunt);
-  bool     isCalibrated()    { return _current_LSB != 0.0; };
+  bool     isCalibrated()    { return _current_LSB != 0.0f; };
   float    getMaxCurrent();
   float    getShunt();
   float    getCurrentLSB();
-  float    getCurrentLSB_mA() { return _current_LSB * 1e3; };
-  float    getCurrentLSB_uA() { return _current_LSB * 1e6; };
+  float    getCurrentLSB_mA() { return _current_LSB * 1e3f; };
+  float    getCurrentLSB_uA() { return _current_LSB * 1e6f; };
 
   //
   //  DIAGNOSE ALERT REGISTER 11  (0x0B)
@@ -230,6 +253,14 @@ public:
 
   //       Debugging
   bool     usesHWSPI();
+  uint32_t readRegister(uint8_t reg, uint8_t bytes)
+  {
+    return _readRegister(reg, bytes);
+  };
+  uint32_t writeRegister(uint8_t reg, uint16_t value)
+  {
+    return _writeRegister(reg, value);
+  };
 
 
 private:
