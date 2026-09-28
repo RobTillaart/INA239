@@ -162,10 +162,13 @@ public:
   //       TEMPERATURE - section 7.6.1.6, page 23
   float    getTemperature();    //  Celsius
 
+
   //  CONFIGURE BUSVOLTAGE LSB - see issue #13
+  //  use when a voltage divider is in front of VBUS.
   //  affects getBusVoltage() and getPower();
-  void     setBusVoltageLSB(float LSB);
-  void     setVoltageRatio(float ratio);
+  //  default are the factory default values.
+  void     setBusVoltageLSB(float LSB = 3.125e-3f);
+  void     setVoltageRatio(float ratio = 1.0f);
 
 
   //

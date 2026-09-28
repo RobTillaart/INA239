@@ -162,7 +162,7 @@ float INA239::getTemperature()
 //  See issue #13
 void INA239::setBusVoltageLSB(float LSB)
 {
-  _voltageRatio = LSB / 3.125e-3f;
+  _voltageRatio = LSB * (1.0f / 3.125e-3f);
 }
 
 void INA239::setVoltageRatio(float ratio)

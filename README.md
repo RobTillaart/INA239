@@ -139,14 +139,18 @@ Verified to work in #13, more feedback welcome.
 
 ### Schema voltage divider
 
+Since 0.4.0 - experimental, use carefully, feedback welcome.
+
 To measure a bus voltage higher than the 85 Volt maximum limit, 
 use a voltage divider connected to the VBUS pin.
+A voltage divider can also be used when measuring around the limit and 
+one wants a safety margin for (un)expected spikes.
 Make sure that the voltage divider drops the maximum voltage enough
 under the 85 Volt limit so the INA239 can handle it.
 
 Note a voltage divider also affects the power reported.
 
-One must use the LOW SIDE mode, as one does not want to have
+One must use the **LOW SIDE mode**, as one does not want to have
 the high voltage (e.g. 120 Volt) to the VIN+ and VIN- pins.
 
 
@@ -181,12 +185,19 @@ This must be mapped upon e.g. 80 Volts so the INA239 still has a 5 Volt margin.
 So the ratio needed is 120 / 80 ==> 1.5.
 
 By choosing R1 = 100 kΩ and R2 200 kΩ, the factor = (100+200)/200 = 1.5.
-The new BusVoltageLSB becomes 1.5 x 3.125e-3f = 4.6875e-3f
-
+The new BusVoltageLSB becomes 1.5 x 3.125e-3f = 4.6875e-3f.
 Calling **INA.setBusVoltageLSB(4.6875e-3f)** or **INA.setVoltageRatio(1.5)** 
-will now return the corrected getBusVoltage() and getPower().
+will now return the corrected getBusVoltage() and getPower() for the given
+voltage divider.
 
-Note that measuring between GND and VBUS will still give the uncorrected voltage!
+Use precision resistors and verify them with a DMM to get the best results. 
+E.g. if the resistors were 201 kΩ and 99 kΩ, the ratio would become 300 / 201
+= 1.49254 and the LSB would be 1.49254 x 3.125e-3f = 4.6642e-3f.
+
+To reset to factory defaults, call **INA.setBusVoltageLSB()** or **INA.setVoltageRatio()**.
+
+Note that measuring the voltage between GND and VBUS with a DMM will
+give the uncorrected voltage
 
 
 ### Special characters
@@ -290,9 +301,10 @@ Note this value can be positive or negative as the INA239 is bidirectional.
 - **float getMicroWatt()** idem
 - **float getKiloWatt()** idem
 
+
 ### Configuration busVoltageLSB
 
-New since 0.4.0.
+New since 0.4.0, use with care.
 
 This configuration is only needed if one wants to monitor a voltage above the
 85 Volt limit of the INA239. See "Schema voltage divider" section above.
@@ -301,9 +313,16 @@ There are two ways to define the busVoltageLSB, one is direct, the other is
 based upon the scaling needed from Vmax to 85 Volt, or a bit lower to be safe.
 You need to call only one of these two in setup() to adjust for the voltage divider.
 
-- **void setBusVoltageLSB(float LSB)** LSB must explicitly be set. 
-Default = 3.125e-3f;
-- **void setVoltageRatio(float ratio)** ratio must explicitly be set.
+- **void setBusVoltageLSB(float LSB = 3.125e-3f)** set a different LSB to calculate 
+the VBUS voltage. The default 3.125e-3f is the factory default;
+- **void setVoltageRatio(float ratio = 1.0f)** set the voltage ratio to calculate 
+the VBUS voltage. Default is 1.0f, indicating no adjustment / correction on the 
+factory default.
+
+Note: these functions could also be used to adjust the LSB, 
+e.g. to match voltages reported your DMM. 
+E.g. call **INA.setBusVoltageLSB(3.128e-3f)** or **INA.setVoltageRatio(0.998f)**
+
 
 ### Configuration
 
