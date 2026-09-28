@@ -320,7 +320,7 @@ int INA239::setMaxCurrentShunt(float maxCurrent, float shunt)
   if (shunt < 0.0001f) return -2;   //  TODO error code
   _maxCurrent = maxCurrent;
   _shunt = shunt;
-  _current_LSB = _maxCurrent * 3.0517578125e-5f;  //  pow(2, -15);
+  _current_LSB = _maxCurrent * 3.0517578125e-5f;  //  powf(2, -15);
 
   //  PAGE 31 (8.1.2)
   float shunt_cal = 819.2e6f * _current_LSB * _shunt;
