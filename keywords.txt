@@ -31,6 +31,9 @@ getKiloWatt	KEYWORD2
 
 getTemperature	KEYWORD2
 
+setBusVoltageLSB	KEYWORD2
+setVoltageRatio	KEYWORD2
+
 
 #########################
 
