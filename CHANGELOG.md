@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - add INA239_voltage_divider.ino example
 - update readme.md
 - add output examples (test run)
+- fix frameworks in library.json
 - minor edits
 
 ----

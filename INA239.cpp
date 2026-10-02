@@ -11,7 +11,6 @@
 #include "INA239.h"
 
 
-
 //  CONFIG MASKS (register 0)
 #define INA239_CFG_RST              0x8000
 #define INA239_CFG_CONVDLY          0x3FC0
