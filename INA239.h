@@ -168,7 +168,9 @@ public:
   //  affects getBusVoltage() and getPower();
   //  default are the factory default values.
   void     setBusVoltageLSB(float LSB = 3.125e-3f);
+  float    getBusVoltageLSB();
   void     setVoltageRatio(float ratio = 1.0f);
+  float    getVoltageRatio();
 
 
   //
@@ -233,6 +235,8 @@ public:
   //  THRESHOLD AND LIMIT REGISTERS 12-17
   //  read datasheet for details, section 7.6.1.10-15, page 25++
   //
+  //  use getVoltageLSB() to map thresholds to voltage
+  //
   //  TODO - design and implement better API?
   //
   void     setShuntOvervoltageTH(uint16_t threshold);
@@ -279,11 +283,12 @@ private:
   uint32_t _readRegister(uint8_t reg, uint8_t bytes);
   uint16_t _writeRegister(uint8_t reg, uint16_t value);
 
+  float    _bus_LSB;
   float    _current_LSB;
+  float    _power_LSB;
   float    _shunt;
   float    _maxCurrent;
   bool     _ADCRange;
-  float    _voltageRatio;
 
   uint8_t  _dataIn = 255;
   uint8_t  _dataOut= 255;

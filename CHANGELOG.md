@@ -12,7 +12,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - add direct register access, readRegister() + writeRegister()
 - add f suffix for float constants
 - add void setBusVoltageLSB(float lsb)
+- add float getBusVoltageLSB()
 - add void setVoltageRatio(float ratio)
+- add float getVoltageRatio()
 - add INA239_voltage_divider.ino example
 - update readme.md
 - add output examples (test run)

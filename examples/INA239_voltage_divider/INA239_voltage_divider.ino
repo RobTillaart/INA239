@@ -31,6 +31,10 @@ void setup()
     while (1);
   }
 
+  INA.setVoltageRatio(1.5f);
+  Serial.println(INA.getVoltageRatio());
+  INA.setBusVoltageLSB();
+  Serial.println(INA.getBusVoltageLSB(), 6);
   INA.setMaxCurrentShunt(10, 0.015);
 }
 

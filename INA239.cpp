@@ -40,9 +40,10 @@ INA239::INA239(uint8_t select, __SPI_CLASS__ * mySPI)
   //  no calibrated values by default.
   _shunt        = 0.015f;
   _maxCurrent   = 10.0f;
+  _bus_LSB      = 3.125e-3f;  //  3.125 mV/LSB
   _current_LSB  = _maxCurrent * pow(2, -19);
+  _power_LSB    = 2.0f * _current_LSB;
   _ADCRange     = false;
-  _voltageRatio = 1.0f;
 }
 
 //  SOFTWARE SPI
@@ -58,9 +59,10 @@ INA239::INA239(uint8_t select, uint8_t dataIn, uint8_t dataOut, uint8_t clock)
   //  no calibrated values by default.
   _shunt        = 0.015f;
   _maxCurrent   = 10.0f;
+  _bus_LSB      = 3.125e-3f;  //  3.125 mV/LSB
   _current_LSB  = _maxCurrent * pow(2, -19);
+  _power_LSB    = 2.0f * _current_LSB;
   _ADCRange     = false;
-  _voltageRatio = 1.0f;
 }
 
 bool INA239::begin()
@@ -99,9 +101,8 @@ float INA239::getBusVoltage()
 {
   //  always positive
   int32_t value = _readRegister(INA239_BUS_VOLTAGE, 2);
-  float bus_LSB = 3.125e-3f;  //  3.125 mV/LSB
-  float voltage = value * bus_LSB;
-  if (_voltageRatio != 1.0) voltage *= _voltageRatio;
+  //  default 3.125 mV/LSB
+  float voltage = value * _bus_LSB;
   return voltage;
 }
 
@@ -120,7 +121,7 @@ float INA239::getShuntVoltage()
   //  handle negative values (16 bit)
   if (value & 0x00008000)
   {
-    value |= 0xFFFF00000;
+     value |= 0xFFFF0000;
   }
   float voltage = value * shunt_LSB;
   return voltage;
@@ -139,8 +140,7 @@ float INA239::getPower()
 {
   uint32_t value = _readRegister(INA239_POWER, 3);
   //  PAGE 28 (8.1.2)
-  float watt = value * (0.2f * _current_LSB);
-  if (_voltageRatio != 1.0) watt *= _voltageRatio;
+  float watt = value * _power_LSB;
   return watt;
 }
 
@@ -149,8 +149,8 @@ float INA239::getTemperature()
 {
   uint32_t value = _readRegister(INA239_TEMPERATURE, 2);
   value >>= 4;
-  float LSB = 125e-3f;  //  125 m°C/LSB
-  return value * LSB;
+  float temperature_LSB = 125e-3f;  //  125 m°C/LSB
+  return value * temperature_LSB;
 }
 
 
@@ -161,12 +161,24 @@ float INA239::getTemperature()
 //  See issue #13
 void INA239::setBusVoltageLSB(float LSB)
 {
-  _voltageRatio = LSB * (1.0f / 3.125e-3f);
+  _bus_LSB = LSB;
+  //  _power_LSB = 2.0f * _current_LSB * _bus_LSB / 3.125e-3f 
+  _power_LSB = _current_LSB * _bus_LSB * (2.0f / 3.125e-3f);
+}
+
+float INA239::getBusVoltageLSB()
+{
+  return _bus_LSB;
 }
 
 void INA239::setVoltageRatio(float ratio)
 {
-  _voltageRatio = ratio;
+  setBusVoltageLSB(3.125e-3f * ratio);
+}
+
+float INA239::getVoltageRatio()
+{
+  return _bus_LSB * (1.0f / 3.125e-3f);
 }
 
 

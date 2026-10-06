@@ -315,13 +315,18 @@ You need to call only one of these two in setup() to adjust for the voltage divi
 
 - **void setBusVoltageLSB(float LSB = 3.125e-3f)** set a different LSB to calculate 
 the VBUS voltage. The default 3.125e-3f is the factory default;
+- **float getBusVoltageLSB()** returns current voltage LSB. For convenience.
 - **void setVoltageRatio(float ratio = 1.0f)** set the voltage ratio to calculate 
-the VBUS voltage. Default is 1.0f, indicating no adjustment / correction on the 
-factory default.
+the VBUS voltage. 
+Default is 1.0f, indicating no adjustment / correction on the factory default.
+- **float getVoltageRatio()** - return set ratio.
 
 Note: these functions could also be used to adjust the LSB, 
 e.g. to match voltages reported your DMM. 
 E.g. call **INA.setBusVoltageLSB(3.128e-3f)** or **INA.setVoltageRatio(0.998f)**
+
+Note: the BUS over- and underVoltage functions do not use the BUS LSB yet.
+The user has to do the math here e.g. by using **getVoltageLSB()**.
 
 
 ### Configuration

@@ -13,8 +13,8 @@ test_core
 getBusVoltage:	56
 getShuntVoltage:	64
 getCurrent:	64
-getPower:	72
-getTemperature:	64
+getPower:	80
+getTemperature:	60
 
 ========================================================
 Speed: 2000000
@@ -23,27 +23,27 @@ test_core
 getBusVoltage:	44
 getShuntVoltage:	52
 getCurrent:	52
-getPower:	56
-getTemperature:	52
+getPower:	68
+getTemperature:	48
 
 ========================================================
 Speed: 4000000
 
 test_core
-getBusVoltage:	36
+getBusVoltage:	40
 getShuntVoltage:	44
-getCurrent:	40
-getPower:	56
-getTemperature:	44
+getCurrent:	44
+getPower:	64
+getTemperature:	40
 
 ========================================================
 Speed: 8000000
 
 test_core
 getBusVoltage:	36
-getShuntVoltage:	44
+getShuntVoltage:	40
 getCurrent:	40
-getPower:	44
-getTemperature:	40
+getPower:	52
+getTemperature:	36
 
 Done
